@@ -4,10 +4,10 @@ project(libuvc)
 find_package(catkin REQUIRED)
 
 find_library(LIBUSB_LIBRARY_NAMES usb-1.0
-	PATHS /opt/local/lib)
+	PATHS /usr/local/lib)
 
 find_path(LIBUSB_INCLUDE_DIR libusb-1.0/libusb.h
-	PATHS /opt/local/include)
+	PATHS /usr/local/include)
 
 SET(SOURCES src/ctrl.c src/ctrl-gen.c src/device.c src/diag.c
            src/frame.c src/init.c src/stream.c
@@ -20,13 +20,13 @@ include_directories(
 )
 
 catkin_package(
-	INCLUDE_DIRS include
+	INCLUDE_DIRS include ${CATKIN_DEVEL_PREFIX}/include
 	LIBRARIES uvc)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 configure_file(include/libuvc/libuvc_config.h.in
-  ${PROJECT_BINARY_DIR}/include/libuvc/libuvc_config.h @ONLY)
+  ${CATKIN_DEVEL_PREFIX}/include/libuvc/libuvc_config.h @ONLY)
 
 add_library(uvc ${SOURCES})
 target_link_libraries(uvc ${LIBUSB_LIBRARY_NAMES})
