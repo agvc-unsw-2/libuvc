@@ -121,6 +121,18 @@ int uvc_set_ctrl(uvc_device_handle_t *devh, uint8_t unit, uint8_t ctrl, void *da
     0 /* timeout */);
 }
 
+int uvc_set_ctrl_generic(uvc_device_handle_t *devh, uint16_t wValue, uint16_t wIndex, void *data, int len)
+{
+  return libusb_control_transfer(
+    devh->usb_devh,
+    REQ_TYPE_SET, UVC_SET_CUR,
+    wValue,
+	wIndex | devh->info->ctrl_if.bInterfaceNumber,		// XXX saki
+    data,
+    len,
+    0 /* timeout */);
+}
+
 /***** INTERFACE CONTROLS *****/
 uvc_error_t uvc_get_power_mode(uvc_device_handle_t *devh, enum uvc_device_power_mode *mode, enum uvc_req_code req_code) {
   uint8_t mode_char;
