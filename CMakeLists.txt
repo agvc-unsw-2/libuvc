@@ -3,7 +3,7 @@ project(libuvc)
 
 find_package(catkin REQUIRED)
 
-find_library(LIBUSB_LIBRARY_NAMES usb-1.0
+find_library(LIBUSB_LIBRARY NAMES usb-1.0
 	PATHS /usr/local/lib)
 
 find_path(LIBUSB_INCLUDE_DIR libusb-1.0/libusb.h
@@ -20,7 +20,7 @@ include_directories(
 )
 
 catkin_package(
-	INCLUDE_DIRS include ${CATKIN_DEVEL_PREFIX}/include
+	INCLUDE_DIRS include
 	LIBRARIES uvc)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -30,6 +30,9 @@ configure_file(include/libuvc/libuvc_config.h.in
 
 add_library(uvc ${SOURCES})
 target_link_libraries(uvc ${LIBUSB_LIBRARY_NAMES})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
 install(TARGETS uvc
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
