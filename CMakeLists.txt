@@ -4,10 +4,10 @@ project(libuvc)
 find_package(catkin REQUIRED)
 
 find_library(LIBUSB_LIBRARY NAMES usb-1.0
-	PATHS /usr/local/lib)
+	PATHS /lib/x86_64-linux-gnu NO_DEFAULT_PATHS)
 
 find_path(LIBUSB_INCLUDE_DIR libusb-1.0/libusb.h
-	PATHS /usr/local/include)
+	PATHS /usr/include)
 
 SET(SOURCES src/ctrl.c src/ctrl-gen.c src/device.c src/diag.c
            src/frame.c src/init.c src/stream.c
@@ -25,11 +25,18 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-configure_file(include/libuvc/libuvc_config.h.in
-  ${CATKIN_DEVEL_PREFIX}/include/libuvc/libuvc_config.h @ONLY)
+#configure_file(include/libuvc/libuvc_config.h.in
+#  ${CATKIN_DEVEL_PREFIX}/include/libuvc/libuvc_config.h @ONLY)
 
 add_library(uvc ${SOURCES})
-target_link_libraries(uvc ${LIBUSB_LIBRARY_NAMES})
+target_link_libraries(uvc ${LIBUSB_LIBRARY})
+
+set(CONF_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
+set(CONF_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}uvc${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+configure_file(libuvcConfig.cmake.in ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/libuvcConfig.cmake)
+
+configure_file(libuvcConfigVersion.cmake.in ${PROJECT_BINARY_DIR}/libuvcConfigVersion.cmake @ONLY)
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
@@ -39,10 +46,3 @@ install(TARGETS uvc
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
-
-set(CONF_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
-set(CONF_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}uvc${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-configure_file(libuvcConfig.cmake.in ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/libuvcConfig.cmake)
-
-configure_file(libuvcConfigVersion.cmake.in ${PROJECT_BINARY_DIR}/libuvcConfigVersion.cmake @ONLY)

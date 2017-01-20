@@ -17,6 +17,5 @@
 #define LIBUVC_VERSION_GTE(major, minor, patch)                         \
   (LIBUVC_VERSION_INT >= (((major) << 16) | ((minor) << 8) | (patch)))
 
-#cmakedefine LIBUVC_HAS_JPEG 1
 
 #endif // !def(LIBUVC_CONFIG_H)
